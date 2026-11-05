@@ -8,11 +8,16 @@ obj/
 .idea/
 *.suo
 
-## ── Secrets & local configuration (NEVER commit) ─────────────────────────────
+## Secrets & local configuration (NEVER commit) ─────────────────────────────
 ## appsettings.json is safe (only placeholders). All others are gitignored.
 **/appsettings.Development.json
 **/appsettings.Production.json
 **/appsettings.Staging.json
+
+## Local environment files (keep the template)
+.env
+.env.*
+!.env.example
 
 ## .NET User Secrets (stored outside the repo by dotnet user-secrets)
 ## They live in %APPDATA%\Microsoft\UserSecrets\ — never in source control.
