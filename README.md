@@ -7,7 +7,7 @@ registering.
 
 > **Live demo:** _coming soon_ — the sandbox will be deployed on AWS Free Tier.
 
-**Frontend repository:** 
+**Frontend:** Angular SPA in a private repository — available on request.
 
 ---
 
