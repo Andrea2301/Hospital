@@ -7,7 +7,7 @@ registering.
 
 > **Live demo:** _coming soon_ — the sandbox will be deployed on AWS Free Tier.
 
-**Frontend repository:** `https://github.com/YOUR-USER/hospitalsv-frontend`
+**Frontend repository:** 
 
 ---
 
@@ -135,7 +135,7 @@ docker run --name hospitalsv-db -e POSTGRES_PASSWORD=postgres \
 ### 2. Backend
 
 ```bash
-git clone https://github.com/YOUR-USER/hospitalsv-api.git
+git clone https://github.com/Andrea2301/Hospital
 cd hospitalsv-api
 
 dotnet user-secrets init --project HospitalSV
@@ -156,7 +156,7 @@ Migrations and the initial admin account are created automatically.
 ### 3. Frontend
 
 ```bash
-git clone https://github.com/YOUR-USER/hospitalsv-frontend.git
+git clone 
 cd hospitalsv-frontend
 npm install
 npm start
@@ -248,63 +248,6 @@ Errors use a consistent envelope with `status`, `message`, `correlationId` and
 
 If you fork this project, rotate every credential before deploying and never reuse
 the development database.
-
----
-
-## Deployment
-
-The backend ships as a multi-stage Docker image that listens on **8080** and runs as
-a non-root user. A step-by-step AWS guide (ECR, ECS Express Mode, S3, CloudFront,
-Aiven and CORS) lives in [`DEPLOY.md`](DEPLOY.md).
-
-```bash
-docker build -t hospitalsv-api .
-docker run --rm -p 8080:8080 --env-file .env hospitalsv-api
-```
-
-The frontend reads its API URL from `src/environments/environment.prod.ts`
-(`fileReplacements` in `angular.json`), then `npm run build` produces the static
-bundle for S3 + CloudFront.
-
----
-
-## Project structure
-
-```
-HospitalSV/
-├── HospitalSV/
-│   ├── Controllers/        # Auth, Doctors, Patients, Appointments, Reports, Users, Demo
-│   ├── Data/               # DbContext, migrations, production and demo seeders
-│   ├── DTOs/               # Request/response contracts
-│   ├── Middleware/         # Correlation ID, security headers, exception handling
-│   ├── Models/             # Domain entities
-│   ├── Services/           # JWT, PDF, email, demo reset hosted service
-│   ├── Program.cs          # Pipeline, auth, CORS, rate limiting, health
-│   └── appsettings.json    # Placeholders only
-├── Dockerfile
-├── .env.example
-├── DEPLOY.md
-└── README.md
-```
-
-The Angular app lives in a separate repository and follows a feature-first layout:
-`features/{landing,auth,dashboard,doctors,patients,appointments,reports,users}`,
-`core/{services,guards,interceptors,models}` and `shared/components`.
-
----
-
-## Status
-
-Verified locally:
-
-- Backend builds in Debug and Release with 0 warnings and 0 errors.
-- Production frontend build passes the configured budgets.
-- Sandbox login, role switching, seeded data, manual reset, cooldown and disabled
-  registration validated through the UI.
-- Production API mode validated: Swagger `404`, `/health` `200`, CORS allowlist
-  enforced, security headers present.
-
-Next: deploy the sandbox to AWS and publish the live URL.
 
 ---
 
