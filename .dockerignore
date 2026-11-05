@@ -1,0 +1,23 @@
+# Build output
+**/bin/
+**/obj/
+
+# Local secrets and machine-specific settings
+**/appsettings.Development.json
+**/appsettings.Production.json
+**/appsettings.Staging.json
+**/*.user
+
+# IDE / VCS
+.git/
+.vs/
+.idea/
+
+# Logs and test artifacts
+**/logs/
+**/*.log
+**/TestResults/
+
+# Frontend is deployed separately
+hospital-frontend/
+**/node_modules/
