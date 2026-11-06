@@ -5,7 +5,7 @@ patient records, conflict-free appointment booking, medical reports with PDF
 export, transactional email, and a public sandbox that anyone can explore without
 registering.
 
-> **Live demo:** _coming soon_ — the sandbox will be deployed on AWS Free Tier.
+> **Live demo:** [fanciful-frangipane-f75132.netlify.app](https://fanciful-frangipane-f75132.netlify.app) — API health at [hospitalapi.tryasp.net/health](https://hospitalapi.tryasp.net/health).
 
 **Frontend:** Angular SPA in a private repository — available on request.
 
@@ -43,7 +43,7 @@ is never the only protection.
 ┌──────────────────────────┐        HTTPS/JSON        ┌──────────────────────────┐
 │  Angular 22 SPA          │ ───────────────────────► │  ASP.NET Core 8 Web API  │
 │  standalone + signals    │ ◄─────────────────────── │  JWT · EF Core 8         │
-│  S3 + CloudFront         │                          │  ECS Express (1 task)    │
+│  Netlify + CDN           │                          │  IIS (MonsterASP)        │
 └──────────────────────────┘                          └────────────┬─────────────┘
                                                                    │ Npgsql / SSL
                                                                    ▼
@@ -58,8 +58,8 @@ is never the only protection.
 ```
 
 The backend is stateless apart from the in-memory demo reset cooldown, which is why
-the deployment intentionally runs **one task**. Migrations and seed data run at
-startup.
+the deployment intentionally keeps **one app instance**. Migrations and seed data
+run at startup.
 
 ### Backend
 
@@ -111,7 +111,7 @@ server-side and issues a normal JWT with a `demo=true` claim.
 | PDF | PdfSharpCore |
 | Email | SMTP + MIME with `.ics` attachment |
 | Container | Docker, multi-stage build, non-root `app` user |
-| Hosting | AWS ECS Express Mode + ECR, S3 + CloudFront |
+| Hosting | Netlify CI/CD (frontend) + IIS on MonsterASP (API) |
 
 ---
 
@@ -136,7 +136,7 @@ docker run --name hospitalsv-db -e POSTGRES_PASSWORD=postgres \
 
 ```bash
 git clone https://github.com/Andrea2301/Hospital
-cd hospitalsv-api
+cd Hospital
 
 dotnet user-secrets init --project HospitalSV
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" \
