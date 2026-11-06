@@ -156,7 +156,8 @@ Migrations and the initial admin account are created automatically.
 ### 3. Frontend
 
 ```bash
-git clone 
+# The frontend repository is private. Clone it with the access you were given.
+git clone <frontend-repo-url>
 cd hospitalsv-frontend
 npm install
 npm start
