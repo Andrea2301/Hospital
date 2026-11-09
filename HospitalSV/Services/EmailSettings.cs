@@ -17,6 +17,14 @@ public class EmailSettings
     public string FromEmail { get; set; } = string.Empty;
     public string FromName { get; set; } = "HospitalSV";
 
+    /// <summary>
+    /// When set, every appointment email is delivered to this address instead of
+    /// the patient. Useful for public sandboxes: the original recipient is kept
+    /// in the subject and the X-Original-Recipient header. Leave empty to send to
+    /// the patient normally.
+    /// </summary>
+    public string RedirectAllTo { get; set; } = string.Empty;
+
     public string HospitalName { get; set; } = "HospitalSV";
     public string SupportEmail { get; set; } = string.Empty;
     public string SupportPhone { get; set; } = string.Empty;

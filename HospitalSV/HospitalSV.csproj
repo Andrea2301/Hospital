@@ -11,6 +11,8 @@
   <ItemGroup>
     <!-- Local development secrets must never reach the publish output. -->
     <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" />
+    <!-- Environment-specific production settings are uploaded manually to the server. -->
+    <Content Update="appsettings.Production.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <ItemGroup>

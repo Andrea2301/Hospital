@@ -71,9 +71,10 @@ public class SmtpEmailService : IEmailService
             await client.SendMailAsync(message, cancellationToken);
 
             _logger.LogInformation(
-                "Appointment #{AppointmentId} {EmailKind} email sent to {Recipient}.",
+                "Appointment #{AppointmentId} {EmailKind} email sent to {Recipient} (intended recipient: {IntendedRecipient}).",
                 appointment.Id,
                 kind,
+                GetEffectiveRecipient(patient.Email),
                 patient.Email);
 
             return true;
@@ -133,15 +134,29 @@ public class SmtpEmailService : IEmailService
         var html = BuildHtml(appointment, patient, doctor, kind, dateText, title, badgeLabel, badgeBackground, badgeText, intro, note);
         var plainText = BuildPlainText(appointment, patient, doctor, dateText, title, intro, note);
 
+        var subject = $"{title} - #{appointment.Id}";
+        var intendedRecipient = patient.Email;
+        var effectiveRecipient = GetEffectiveRecipient(intendedRecipient);
+        var isRedirected = !string.Equals(effectiveRecipient, intendedRecipient, StringComparison.OrdinalIgnoreCase);
+
         var message = new MailMessage
         {
             From = new MailAddress(_settings.FromEmail, _settings.FromName),
-            Subject = $"{title} - #{appointment.Id}",
+            Subject = isRedirected
+                ? $"[Demo -> {intendedRecipient}] {subject}"
+                : subject,
+            SubjectEncoding = Encoding.UTF8,
             Body = plainText,
             IsBodyHtml = false
         };
 
-        message.To.Add(patient.Email);
+        message.To.Add(effectiveRecipient);
+
+        if (isRedirected)
+        {
+            message.Headers.Add("X-Original-Recipient", intendedRecipient);
+        }
+
         message.AlternateViews.Add(
             AlternateView.CreateAlternateViewFromString(html, Encoding.UTF8, "text/html"));
 
@@ -425,6 +440,11 @@ public class SmtpEmailService : IEmailService
 
         return attachment;
     }
+
+    private string GetEffectiveRecipient(string intendedRecipient)
+        => string.IsNullOrWhiteSpace(_settings.RedirectAllTo)
+            ? intendedRecipient
+            : _settings.RedirectAllTo.Trim();
 
     private SmtpClient BuildClient()
     {

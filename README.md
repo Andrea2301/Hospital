@@ -89,7 +89,9 @@ The sandbox is a single shared instance, not multi-tenant. When `Demo:Enabled=tr
    8 patients, 17 appointments and 3 medical reports.
 2. The login page shows three role cards (Administrator, Doctor, Receptionist).
    Clicking one logs in without a password.
-3. Registration is blocked and email delivery is disabled.
+3. Registration is blocked. Email delivery is enabled but every message is
+   redirected to the operator's inbox (`Email:RedirectAllTo`), so the sandbox
+   never writes to a patient address.
 4. Data is reset **every 24 hours**, and visitors can trigger a manual reset with a
    **10-minute cooldown**. Resetting signs the visitor out.
 5. A sticky banner makes it obvious that the data is fictional, and the API sends
@@ -195,6 +197,7 @@ All settings can be supplied as environment variables. In .NET, `__` maps to `:`
 | `Email__Enabled` | Enables SMTP delivery |
 | `Email__Host` / `Port` / `EnableSsl` | SMTP endpoint |
 | `Email__Username` / `Password` / `FromEmail` / `FromName` | Sender credentials |
+| `Email__RedirectAllTo` | Sends every sandbox email to this address instead of the patient; the original recipient is kept in the subject |
 | `Seed__AdminPassword` / `DoctorPassword` / `ReceptionistPassword` | Initial accounts (non-demo only) |
 
 `appsettings.json` contains **placeholders only**. Real secrets belong in user
@@ -244,8 +247,9 @@ Errors use a consistent envelope with `status`, `message`, `correlationId` and
 - Swagger and stack traces are not exposed in Production.
 - Rate limiting is partitioned by forwarded client IP behind the load balancer.
 - Soft-deleted rows are filtered out by EF global query filters.
-- The sandbox disables registration and email so it cannot send mail to real
-  addresses or be used to create persistent accounts.
+- The sandbox disables registration and redirects every email to the operator's
+  inbox, so it cannot send mail to patient addresses or be used to create
+  persistent accounts.
 
 If you fork this project, rotate every credential before deploying and never reuse
 the development database.
